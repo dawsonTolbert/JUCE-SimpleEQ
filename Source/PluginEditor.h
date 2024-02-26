@@ -20,7 +20,11 @@ struct CustomRotarySlider : juce::Slider {
 //==============================================================================
 /**
 */
-class SimpleEQAudioProcessorEditor  : public juce::AudioProcessorEditor
+class SimpleEQAudioProcessorEditor  : public juce::AudioProcessorEditor,
+//listener is called synchronously when a param changes, so handler code needs to be thread-safe and avoid blocking
+//callbacks are gonna happen on audio chain, cannot do GUI update in these callbacks
+juce::AudioProcessorParameter::Listener,
+juce::Timer
 {
 public:
     SimpleEQAudioProcessorEditor (SimpleEQAudioProcessor&);
@@ -30,10 +34,18 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void parameterValueChanged(int parameterIndex, float newValue) override;
+    void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override { }
+
+    void timerCallback() override;
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SimpleEQAudioProcessor& audioProcessor;
+
+    //atomic flag for deciding if chain needs updating and component repainted
+    juce::Atomic<bool> parametersChanged{ false };
 
     CustomRotarySlider peakFreqSlider,
         peakGainSlider,

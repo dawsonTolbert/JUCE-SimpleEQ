@@ -18,7 +18,7 @@ struct LookAndFeel : juce::LookAndFeel_V4
         float sliderPosProportional,
         float rotaryStartAngle,
         float rotaryEndAngle,
-        juce::Slider&) override{}
+        juce::Slider&) override;
 };
 
 struct RotarySliderWithLabels : juce::Slider 
@@ -34,7 +34,7 @@ struct RotarySliderWithLabels : juce::Slider
     }
 
     //need paint fn for custom visuals
-    void paint(juce::Graphics& g) override { }
+    void paint(juce::Graphics& g) override;
     //need rectangle for slider bounds
     juce::Rectangle<int> getSliderBounds() const;
     //int for text height

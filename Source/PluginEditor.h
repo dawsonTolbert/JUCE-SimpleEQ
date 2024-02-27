@@ -33,6 +33,13 @@ struct RotarySliderWithLabels : juce::Slider
         setLookAndFeel(nullptr);
     }
 
+    struct LabelPos {
+        float pos;
+        juce::String label;
+    };
+
+    juce::Array<LabelPos> labels;
+
     //need paint fn for custom visuals
     void paint(juce::Graphics& g) override;
     //need rectangle for slider bounds
